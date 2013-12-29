@@ -1,17 +1,111 @@
+//-
+//-	WIP: Make a single set of form helpers - we are opinionated,
+//-		and don't need options. That is the appeal of using this
+//-		project - you don't need to think, just do.
+//-
 //- Form helper mixins
 //-
 //-
 //-
 //-	http://pherricoxide.wordpress.com/2013/07/24/jade-mixins-blocks-attributes-and-more/
+//-
+//-	Note on attributes: https://github.com/visionmedia/jade/issues/664
 
-mixin fieldBlock(title, helpAnchor)
-	div.cardContainer
-		h3.cardHeader
-			span #{title}
-			a(href="help##{helpAnchor}", target="_blank")
-				img.helpIcon(src="/images/help.png", style="float: right;")
-		div.cardOuter(style="display: inline-block")
-			block
+//- This will render a div around whatever follows. NEAT!!!
+mixin row(o)
+	- attributes = o || attributes
+	div.form-group(attributes)
+		block
 
+//- Standard label - span around the text in case there is a block
+mixin label(text)
+	label(attributes)
+		if(text)
+			span #{text}
+		block
+
+//-	Standard text box
 mixin textBox(o)
-	input(type="text", name=o.name, value=o.value, attributes)
+	//- Add in the allowed attributes and defaults
+	- orgAttributes = attributes || {}
+	- if(o) { jade.merge(attributes, o) }
+	- attributes.id = orgAttributes.id || o.id || orgAttributes.name || o.name
+	- attributes.type = orgAttributes.type || o.type || "text"
+	input(attributes).form-control
+
+
+//-	Standard check box
+mixin checkBox(o)
+	//- Add in the allowed attributes and defaults
+	- orgAttributes = attributes || {}
+	- if(o) { jade.merge(attributes, o) }
+	- attributes.id = orgAttributes.id || o.id || orgAttributes.name || o.name
+	- attributes.type = orgAttributes.type || o.type || "checkbox"
+	input(attributes)
+
+
+//-	Checkbox on one line, with label after
+mixin checkBoxLine(o)
+	.checkbox
+		+label()
+			+checkBox(o)("data-bind"=o["data-bind"])
+			span #{o.labelAfter}
+
+
+//-	Standard radio box
+mixin radioBox(o)
+	//- Add in the allowed attributes and defaults
+	- orgAttributes = attributes || {}
+	- if(o) { jade.merge(attributes, o) }
+	- attributes.id = orgAttributes.id || o.id || orgAttributes.name || o.name
+	- attributes.type = orgAttributes.type || o.type || "radio"
+	input(attributes)
+
+
+//-	Radio on one line, with label after
+mixin radioBoxLine(o)
+	.radio
+		+label()
+			+radioBox(o)("data-bind"=o["data-bind"])
+			span #{o.labelAfter}
+
+//- List of radio boxes, with labels after them
+mixin radioBoxList(o)
+	each item in o.options
+		- item.name = item.name  || o.name
+		.radio
+			+label()
+				+radioBox(item)
+				span #{item.labelAfter || item.label}
+
+
+//- TODO: Multiple and option groups
+//- WIP: Create a matching set of methods to create these
+mixin selectBox(o)
+
+	//- Add in the allowed attributes and defaults
+	- orgAttributes = attributes || {}
+	- if(o) { jade.merge(attributes, o) }
+	- delete attributes.options
+	- delete attributes.o
+	- attributes.id = orgAttributes.id || o.id || orgAttributes.name || o.name
+
+	//- attributes.name = attributes.name || o.o.name || o.name
+	//- attributes.id = attributes.id || o.o.id || o.id
+	select(attributes).form-control
+		each obj in o.options
+			//- Ensure we always have a value, even if it's empty string
+			option(selected=obj.selected? "selected": undefined, value="#{obj.value? obj.value: obj.text? obj.text: ''}") #{obj.text}
+
+
+//- A form row, showing standarde layout for label and required indicator
+//- TODO: Add error container for validation issues.
+mixin formRow(o)
+	+row(class=o.required? "required": undefined)
+		+label(for="#{o.id || o.name}").col-sm-2.control-label
+			span #{o.label}
+			span.requiredIndicator *
+		div.col-sm-10
+			block
+			p.help-block #{o.help}
+

@@ -1,6 +1,6 @@
 {
   "name": "jade-helpers",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Various useful helpers and mixins for jade",
   "main": "index.js",
   "scripts": {},
@@ -17,5 +17,10 @@
   "engines": {
     "node": ">=0.4.6"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "readme": "jade-helpers\n============\n\nVarious useful helpers and mixins for jade\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/jsguy/jade-helpers/issues"
+  }
 }
