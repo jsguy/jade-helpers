@@ -1,15 +1,13 @@
 //-
-//-	WIP: Make a single set of form helpers - we are opinionated,
-//-		and don't need options. That is the appeal of using this
-//-		project - you don't need to think, just do.
-//-
 //- Form helper mixins
 //-
+//- 	Creates form elements (and so much more) from JS objects
 //-
+//- Inspiration:
 //-
 //-	http://pherricoxide.wordpress.com/2013/07/24/jade-mixins-blocks-attributes-and-more/
-//-
 //-	Note on attributes: https://github.com/visionmedia/jade/issues/664
+//-
 
 //- This will render a div around whatever follows. NEAT!!!
 mixin row(o)
@@ -26,48 +24,38 @@ mixin label(text)
 
 //-	Standard text box
 mixin textBox(o)
-	//- Add in the allowed attributes and defaults
-	- orgAttributes = attributes || {}
-	- if(o) { jade.merge(attributes, o) }
-	- attributes.id = orgAttributes.id || o.id || orgAttributes.name || o.name
-	- attributes.type = orgAttributes.type || o.type || "text"
+	- attributes = helper.getFieldObject("text", o, attributes).attr
 	input(attributes).form-control
 
 
 //-	Standard check box
 mixin checkBox(o)
-	//- Add in the allowed attributes and defaults
-	- orgAttributes = attributes || {}
-	- if(o) { jade.merge(attributes, o) }
-	- attributes.id = orgAttributes.id || o.id || orgAttributes.name || o.name
-	- attributes.type = orgAttributes.type || o.type || "checkbox"
+	- attributes = helper.getFieldObject("checkbox", o, attributes).attr
 	input(attributes)
 
 
 //-	Checkbox on one line, with label after
 mixin checkBoxLine(o)
+	- var fObj = helper.getFieldObject("checkbox", o, attributes)
 	.checkbox
 		+label()
-			+checkBox(o)("data-bind"=o["data-bind"])
-			span #{o.labelAfter}
+			+checkBox(fObj.attr)
+			span #{fObj.meta.labelAfter}
 
 
 //-	Standard radio box
 mixin radioBox(o)
-	//- Add in the allowed attributes and defaults
-	- orgAttributes = attributes || {}
-	- if(o) { jade.merge(attributes, o) }
-	- attributes.id = orgAttributes.id || o.id || orgAttributes.name || o.name
-	- attributes.type = orgAttributes.type || o.type || "radio"
+	- attributes = helper.getFieldObject("radio", o, attributes).attr
 	input(attributes)
 
 
 //-	Radio on one line, with label after
 mixin radioBoxLine(o)
+	- var fObj = helper.getFieldObject("radio", o, attributes)
 	.radio
 		+label()
-			+radioBox(o)("data-bind"=o["data-bind"])
-			span #{o.labelAfter}
+			+radioBox(fObj.attr)
+			span #{fObj.meta.labelAfter}
 
 //- List of radio boxes, with labels after them
 mixin radioBoxList(o)
@@ -80,32 +68,23 @@ mixin radioBoxList(o)
 
 
 //- TODO: Multiple and option groups
-//- WIP: Create a matching set of methods to create these
 mixin selectBox(o)
-
-	//- Add in the allowed attributes and defaults
-	- orgAttributes = attributes || {}
-	- if(o) { jade.merge(attributes, o) }
-	- delete attributes.options
-	- delete attributes.o
-	- attributes.id = orgAttributes.id || o.id || orgAttributes.name || o.name
-
-	//- attributes.name = attributes.name || o.o.name || o.name
-	//- attributes.id = attributes.id || o.o.id || o.id
+	- attributes = helper.getFieldObject("select", o, attributes).attr
+	- var options = helper.fieldOptions(o)
 	select(attributes).form-control
-		each obj in o.options
+		each obj in options
 			//- Ensure we always have a value, even if it's empty string
 			option(selected=obj.selected? "selected": undefined, value="#{obj.value? obj.value: obj.text? obj.text: ''}") #{obj.text}
 
 
-//- A form row, showing standarde layout for label and required indicator
+//- A form row, showing standard layout for label and required indicator
 //- TODO: Add error container for validation issues.
 mixin formRow(o)
-	+row(class=o.required? "required": undefined)
-		+label(for="#{o.id || o.name}").col-sm-2.control-label
-			span #{o.label}
+	- var fObj = helper.getFieldObject("", o, attributes)
+	+row(class=fObj.meta.required? "required": undefined)
+		+label(for="#{fObj.attr.id || fObj.attr.name}").col-sm-2.control-label
+			span #{fObj.meta.label}
 			span.requiredIndicator *
 		div.col-sm-10
 			block
-			p.help-block #{o.help}
-
+			p.help-block #{fObj.meta.help? fObj.meta.help: ''}
