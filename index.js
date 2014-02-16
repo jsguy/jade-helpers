@@ -84,7 +84,6 @@ exports.helpers = {
 	},
 	//	returns: { attr:{}, meta:{}, options: [] }
 	getFieldObject: function(type, field, attribs) {
-		console.log('gfo', arguments);
 		var attr = this.augment(field, attribs);
 
 		attr.id = field.id || field.name;
