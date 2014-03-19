@@ -12,7 +12,7 @@
 //- This will render a div around whatever follows. NEAT!!!
 mixin row(o)
 	- attributes = o || attributes
-	div.form-group(attributes)
+	div.cf.form-group(attributes)
 		block
 
 //- Standard label - span around the text in case there is a block
@@ -79,12 +79,12 @@ mixin selectBox(o)
 
 //- A form row, showing standard layout for label and required indicator
 //- TODO: Add error container for validation issues.
-mixin formRow(o)
+mixin formRow(o, style)
 	- var fObj = helper.getFieldObject("", o, attributes)
 	+row(class=fObj.meta.required? "required": undefined)
-		+label(for="#{fObj.attr.id || fObj.attr.name}").col-sm-2.control-label
+		+label(for="#{fObj.attr.id || fObj.attr.name}", class="#{style && style.labelClass? style.labelClass: 'col-sm-2'}").control-label
 			span #{fObj.meta.label}
 			span.requiredIndicator *
-		div.col-sm-10
+		div(class="#{style && style.fieldClass? style.fieldClass: 'col-sm-10'}")
 			block
 			p.help-block #{fObj.meta.help? fObj.meta.help: ''}
