@@ -98,10 +98,10 @@ exports.helpers = {
 };
 
 //	Express integration for locals
-exports.addHelpers = function(locals) {
+exports.addHelpers = function(app) {
 	var i;
-	locals.helper = {};
+	app.locals.helper = {};
 	for(i in exports.helpers) { if(exports.helpers.hasOwnProperty(i)) {
-		locals.helper[i] = exports.helpers[i];
+		app.locals.helper[i] = exports.helpers[i];
 	}}
 };
