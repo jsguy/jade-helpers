@@ -1,7 +1,7 @@
 {
   "name": "jade-helpers",
   "version": "0.0.7",
-  "description": "Various useful helpers and mixins for jade",
+  "description": "Various useful helpers and mixins for jade - currently only for NodeMVC",
   "main": "index.js",
   "scripts": {},
   "repository": {
@@ -12,13 +12,13 @@
     "name": "Mikkel Bergmann",
     "email": "mikkel@jsguy.com"
   },
-  "private": true,
+  "private": false,
   "license": "MIT",
   "engines": {
     "node": ">=0.4.6"
   },
   "dependencies": {},
-  "readme": "jade-helpers\n============\n\nVarious useful helpers and mixins for jade\n",
+  "readme": "jade-helpers\n============\n\nVarious useful helpers and mixins for jade - currently only for NodeMVC\n",
   "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/jsguy/jade-helpers/issues"
