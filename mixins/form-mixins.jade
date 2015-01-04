@@ -12,12 +12,12 @@
 //- This will render a div around whatever follows. NEAT!!!
 mixin row(o)
 	- attributes = o || attributes
-	div.cf.form-group(attributes)
+	div.cf.form-group()&attributes(attributes)
 		block
 
 //- Standard label - span around the text in case there is a block
 mixin label(text)
-	label(attributes)
+	label()&attributes(attributes)
 		if(text)
 			span #{text}
 		block
@@ -25,13 +25,13 @@ mixin label(text)
 //-	Standard text box
 mixin textBox(o)
 	- attributes = helper.getFieldObject("text", o, attributes).attr
-	input(attributes).form-control
+	input()&attributes(attributes).form-control
 
 
 //-	Standard check box
 mixin checkBox(o)
 	- attributes = helper.getFieldObject("checkbox", o, attributes).attr
-	input(attributes)
+	input()&attributes(attributes)
 
 
 //-	Checkbox on one line, with label after
@@ -46,7 +46,7 @@ mixin checkBoxLine(o)
 //-	Standard radio box
 mixin radioBox(o)
 	- attributes = helper.getFieldObject("radio", o, attributes).attr
-	input(attributes)
+	input()&attributes(attributes)
 
 
 //-	Radio on one line, with label after
@@ -71,7 +71,7 @@ mixin radioBoxList(o)
 mixin selectBox(o)
 	- attributes = helper.getFieldObject("select", o, attributes).attr
 	- var options = helper.fieldOptions(o)
-	select(attributes).form-control
+	select()&attributes(attributes).form-control
 		each obj in options
 			//- Ensure we always have a value, even if it's empty string
 			option(selected=obj.selected? "selected": undefined, value="#{obj.value? obj.value: obj.text? obj.text: ''}") #{obj.text}
